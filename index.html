@@ -11,18 +11,18 @@
     <main>
         <header>
             <h1>TITLE</h1>
-            <Button>About</Button>
+            <Button id="aboutBtn">About</Button>
             <p>Select a month and year to view Best-Sellers and contextual information about their authors.</p>
         </header>
         <section>
             <form>
                 <fieldset>
-                    <select>
-                        <option>Hardcover Fiction</option>
+                    <select id="listSelect">
+                        <option value="hardcover-fiction">Hardcover Fiction</option>
                     </select>
-                    <input type="month" value="2019-08">
-                    <button type="reset">Reset Form</button>
-                    <button type="submit">Search Best-Sellers</button>
+                    <input type="month" value="2019-08" id="dateSelect">
+                    <button type="reset" id="searchReset">Reset Form</button>
+                    <button type="submit" id="searchSubmit">Search Best-Sellers</button>
                 </fieldset>
             </form>
         </section>
