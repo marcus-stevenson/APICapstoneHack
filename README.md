@@ -14,4 +14,4 @@
 <p>Easy! Best-Seller Search allows users to search for NYT Best-Sellers and contextual information about their authors.</p>
 <p>This app makes calls to the NTY Books API and the Wikipedia API</p>
 <h2>Screen Shots</h2>
-<img src=screenshots/APIsc1.png>
+![landing page](screenshots/APIsc1.png)
