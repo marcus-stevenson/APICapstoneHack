@@ -12,9 +12,9 @@ function renderBookList(responseObj){
                 `<h3 class="hidden">${bookTitle}</h3>`+
                 `<h4 class='authorName hidden'>${bookAuthor}</h4>`+
                 `<img src="${bookCover}" alt="Book Cover" class="coverImg">`+
-                `<input type="button" value="Author Info" id="wBtn${i}" class="infoBtn">`+
+                `<input type="button" value="Author Info" id="wBtn${i}" class="infoBtn" aria-pressed="false">`+
                 '<div class="wikiRes hidden"></div>'+
-                `<input type="button" value="More Books" id="nytBtn${i}" class="infoBtn">`+
+                `<input type="button" value="More Books" id="nytBtn${i}" class="infoBtn" aria-pressed="false">`+
                 '<div class="nytRes hidden"></div>'+
             '</div>'
         )
@@ -102,9 +102,7 @@ function linksBtnClicked(clickEvent){
     $(`#${clickEvent.currentTarget.id}`).removeAttr('id')
     //format author name and  pass to url for fetch()
     //https://api.nytimes.com/svc/books/v3/lists/best-sellers/history.json?author=Daniel%20Silva&api-key=
-    //format author name and  pass to url for fetch()
     let selectedResultID = clickEvent.target.parentElement.id
-        //fetch info from wikipedia
     let nytString = $(`#${selectedResultID}`).children('.authorName').text();
     let nytStringFormatted = nytString.replace(' ', '%20')
     let nytURL = `https://api.nytimes.com/svc/books/v3/lists/best-sellers/history.json?author=${nytStringFormatted}&api-key=${APIKey}`
@@ -140,14 +138,17 @@ function hiderFunc(clickEvent, btnClkd){
     }
 }
 function handleResultsClick(clickEvent){
+    ariaPressedToggler(clickEvent);
     let currentVal = clickEvent.currentTarget.value; 
     if (currentVal === 'Author Info'){
+        //show/hide blurb from wikipedia api
         if(clickEvent.currentTarget.id === ''){
             hiderFunc(clickEvent, 0);
         }else{
             wikiBtnClicked(clickEvent);
         }
     }else{
+        //show/hide list of books by author from NYT books api
         if(clickEvent.currentTarget.id === ''){
             hiderFunc(clickEvent, 1);
         }else{
@@ -156,16 +157,22 @@ function handleResultsClick(clickEvent){
     }
     //after data is displayed, each click hides/shows info
 }
+function ariaPressedToggler(clickEvent){
+    let currentBool = (clickEvent.currentTarget.getAttribute('aria-pressed')==="true");
+    clickEvent.currentTarget.setAttribute('aria-pressed', !currentBool);
+}
 function handleUserInput(){  
     //at page load, listen for clicks on start button
     // on click, hide start button, unhide search bar.
     $('#startBtn').on('click', function(e){
         $('#startBtn').toggleClass('hidden')
         $('.searchBar').toggleClass('hidden')
+        $('.pageInfo').toggleClass('hidden');
     })
     //handle clicks on about button
     $('#aboutBtn').on('click', function(e){
         $('.pageInfo').toggleClass('hidden');
+        ariaPressedToggler(e)
     })
     //handle clicks on search button
     $('#searchSubmit').on('click', function(e){

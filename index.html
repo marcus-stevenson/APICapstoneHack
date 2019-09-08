@@ -12,12 +12,12 @@
     <main>
         <header>
             <h1><div class="easyTitle">Easy!</div>Best-Seller Search</h1>
-            <Button id="aboutBtn" class="searchBtn">About</Button>
-            <div class="pageInfo hidden">
-            <p>Select List, Month, and Year to search for NYT Best-Sellers and contextual information about their authors.</p>
+            <Button id="aboutBtn" class="searchBtn" aria-pressed="true">About</Button>
+            <div class="pageInfo">
+            <p>Select List, Month, and Year to search for NYT Best-Sellers and contextual information about their authors. Data provided by Wikipedia and The New York Times</p>
             <img src="images/nytLogo.png" alt="Data provided by The New York Times" class="nytAttribLogo">
             </div>
-            <Button id="startBtn" class="searchBtn nytAttribLogo">Let's Find Some Books!</Button>
+            <Button id="startBtn" class="searchBtn nytAttribLogo" aria-pressed="false">Let's Find Some Books!</Button>
         </header>
         <section class="searchBar hidden">
             <form>
@@ -65,6 +65,7 @@
         </section>
         <section id="resultsBox">
         </section>
+        <footer>&#xa9; 2019 Marcus Stevenson</footer>
     </main>
     <script src="index.js"></script>
 </body>

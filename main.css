@@ -18,11 +18,10 @@ h1{
 .pageInfo{
     font-family: 'Roboto', sans-serif;
     color: darkslategray;
-    font-size: 24px;
+    font-size: 22px;
     width: 65%;
     margin-left: auto;
     margin-right: auto;
-    text-align: initial;
 }
 .nytAttribLogo{
     margin-left: auto;
@@ -31,7 +30,9 @@ h1{
     margin-bottom: 10px;
 }
 footer{
-    background: gray;
+    margin-top: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
 }
 body{
     background: gainsboro;
