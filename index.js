@@ -3,20 +3,19 @@ const APIKey = 'OhfA7KfFwRf19i3x2ndjDzGDsXJbGbwv'
 function renderBookList(responseObj){
     //for testing purposes: alert(responseObj.results.books[0].title)
     //render results to dom
-    $('#resultsBox').append(`<p>Results:${responseObj.num_results}</p>`)
     for(let i=0; i<=responseObj.results.books.length-1; i++){
         let bookTitle = responseObj.results.books[i].title;
         let bookCover = responseObj.results.books[i].book_image;
         let bookAuthor = responseObj.results.books[i].author;
         $('#resultsBox').append(
             `<div class="box" id="res${i}">`+
-                `<h3>${bookTitle}</h3>`+
-                `<h4 class='authorName'>${bookAuthor}</h4>`+
-                `<img src="${bookCover}" alt="Book Cover">`+
-                `<input type="button" value="Wikipedia info" id="wBtn${i}" class="infoBtn">`+
-                '<div class="wikiRes"></div>'+
-                `<input type="button" value="NYT Links" id="nytBtn${i}" class="infoBtn">`+
-                '<div class="nytRes"></div>'+
+                `<h3 class="hidden">${bookTitle}</h3>`+
+                `<h4 class='authorName hidden'>${bookAuthor}</h4>`+
+                `<img src="${bookCover}" alt="Book Cover" class="coverImg">`+
+                `<input type="button" value="Author Info" id="wBtn${i}" class="infoBtn">`+
+                '<div class="wikiRes hidden"></div>'+
+                `<input type="button" value="More Books" id="nytBtn${i}" class="infoBtn">`+
+                '<div class="nytRes hidden"></div>'+
             '</div>'
         )
     }
@@ -38,7 +37,9 @@ function searchLists(dateToFetch, listToFetch){
 function searchSubmit(){
     //set vars to input values
     let listVal = $("#listSelect").val();
-    let dateVal = $("#dateSelect").val();
+    let yearVal = $("#searchYear").val();
+    let monthVal = $("#searchMonth").val();
+    let dateVal = `${yearVal}-${monthVal}`;
     //pass listVal into books API /lists/overview.json 
     //endpoint to find list published dates
     let overviewURL = `https://api.nytimes.com/svc/books/v3/lists/overview.json?published_date=${dateVal}-01&api-key=${APIKey}`
@@ -67,7 +68,14 @@ function wikiBtnClicked(clickEvent){
     let wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${wikiStringFormatted}`
     fetch(wikiURL)
         .then(function(response){
-            if(response.ok){
+            let statusNum = response.status;
+            if (statusNum === 404){
+                //author string not recognized by wikipedia api
+                //display message to user in wikiresults box
+                $(`#${selectedResultID}`).children('.wikiRes').append("<p>This author's name does not have a corresponding Wikipedia article. You can request that one be made <a href='https://en.wikipedia.org/wiki/Wikipedia:Articles_for_creation'>here</a></p>")
+                $(`#${selectedResultID}`).children('.wikiRes').toggleClass('hidden')
+            }
+            else if(response.ok){
                 return response.json();
             }
         })
@@ -82,7 +90,12 @@ function wikiBtnClicked(clickEvent){
                 //show disambiguation list if response is disambiguation page
                 let disamText = responseJson.extract_html;
                 $(`#${selectedResultID}`).children('.wikiRes').append(`${disamText}`)
+            }else{
+                //author string not recognized by wikipedia api
+                //display message to user in wikiresults box
+                $(`#${selectedResultID}`).children('.wikiRes').append("<p>This author's name does not have a corresponding Wikipedia article. You can request that one be made <a href='https://en.wikipedia.org/wiki/Wikipedia:Articles_for_creation'>here</a></p>")
             }
+            $(`#${selectedResultID}`).children('.wikiRes').toggleClass('hidden')
         })
 }
 function linksBtnClicked(clickEvent){
@@ -112,6 +125,7 @@ function linksBtnClicked(clickEvent){
                     `<li>${bookToAdd}</li>`
                 )
             }
+            $(`#${selectedResultID}`).children('.nytRes').toggleClass('hidden')
         })
 }
 function hiderFunc(clickEvent, btnClkd){
@@ -127,7 +141,7 @@ function hiderFunc(clickEvent, btnClkd){
 }
 function handleResultsClick(clickEvent){
     let currentVal = clickEvent.currentTarget.value; 
-    if (currentVal === 'Wikipedia info'){
+    if (currentVal === 'Author Info'){
         if(clickEvent.currentTarget.id === ''){
             hiderFunc(clickEvent, 0);
         }else{
@@ -142,39 +156,16 @@ function handleResultsClick(clickEvent){
     }
     //after data is displayed, each click hides/shows info
 }
-//
-/*function populateListOptions(){
-    let optionURL = `https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=${APIKey}`
-    fetch(optionURL)
-        .then(function(response){
-            if (response.ok){
-                return response.json();
-            } 
-        })
-        .then(function(responseJson){
-            let numOptions = responseJson.results.length
-            for(let i=0; i<=numOptions-1; i++){
-                let currentOptName = responseJson.results[i].list_name;
-                let currentOptValue = responseJson.results[i].list_name_encoded;
-                $('#listSelect').append(`<option value="${currentOptValue}">${currentOptName}</option>`)
-            }
-        })
-}*/
-function handleUserInput(){
-    //populate list options
-    //populateListOptions();
-    //will fix this feature later
-    //this populates the list options automatically using the nyt books /lists/names
-    //endpoint but needs some work because some lists have been discontinued but still
-    //show up, causing errors when fetching... 
-    //limit date input by 'newest_published_date'/'oldest_published_date'?
-    
-
+function handleUserInput(){  
+    //at page load, listen for clicks on start button
+    // on click, hide start button, unhide search bar.
+    $('#startBtn').on('click', function(e){
+        $('#startBtn').toggleClass('hidden')
+        $('.searchBar').toggleClass('hidden')
+    })
     //handle clicks on about button
     $('#aboutBtn').on('click', function(e){
-    })
-    //handle clicks on reset form button
-    $('#searchReset').on('click', function(e){
+        $('.pageInfo').toggleClass('hidden');
     })
     //handle clicks on search button
     $('#searchSubmit').on('click', function(e){

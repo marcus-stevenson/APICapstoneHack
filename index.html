@@ -5,28 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Best-Sellers</title>
     <link rel="stylesheet" type="text/css" href="main.css">
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Playfair+Display+SC|Roboto&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 </head>
 <body>
     <main>
         <header>
-            <h1>TITLE</h1>
-            <!--<Button id="aboutBtn">About</Button>
-            <p>Select a month and year to view Best-Sellers and contextual information about their authors.</p>
-            cosmetic stuff to implement later-->
+            <h1><div class="easyTitle">Easy!</div>Best-Seller Search</h1>
+            <Button id="aboutBtn" class="searchBtn">About</Button>
+            <div class="pageInfo hidden">
+            <p>Select List, Month, and Year to search for NYT Best-Sellers and contextual information about their authors.</p>
+            <img src="images/nytLogo.png" alt="Data provided by The New York Times" class="nytAttribLogo">
+            </div>
+            <Button id="startBtn" class="searchBtn nytAttribLogo">Let's Find Some Books!</Button>
         </header>
-        <section>
+        <section class="searchBar hidden">
             <form>
                 <fieldset>
-                    <select id="listSelect">
-                        <option value="combined-print-and-e-book-fiction">Combined Print and E-Book Fiction</option>
-                        <option value="combined-print-and-e-book-nonfiction">Combined Print and E-Book Nonfiction</option>
+                    <select id="listSelect" class="searchBtn">
+                        <optgroup>
+                        <option value="combined-print-and-e-book-fiction">Print and E-Book Fiction</option>
+                        <option value="combined-print-and-e-book-nonfiction">Print and E-Book Nonfiction</option>
                         <option value="hardcover-fiction">Hardcover Fiction</option>
                         <option value="hardcover-nonfiction">Hardcover Nonfiction</option>
                         <option value="trade-fiction-paperback">Trade Fiction Paperback</option>
                         <option value="paperback-nonfiction">Paperback Nonfiction</option>
-                        <option value="advice-how-to-and-miscellaneous">Advice How-To and Miscellaneous</option>
-                        <option value="childrens-middle-grade-hardcover">Childrens Middle Grade Hardcover</option>
+                        <option value="advice-how-to-and-miscellaneous">Advice, How-To, and Misc</option>
+                        <option value="childrens-middle-grade-hardcover">Middle Grade Hardcover</option>
                         <option value="picture-books">Picture Books</option>
                         <option value="series-books">Series Books</option>
                         <option value="young-adult-hardcover">Young Adult Hardcover</option>
@@ -35,18 +40,31 @@
                         <option value="business-books">Business Books</option>
                         <option value="science">Science</option>
                         <option value="sports">Sports</option>
+                        </optgroup>
                     </select>
-                    <input type="month" value="2019-08" id="dateSelect">
-                    <button type="reset" id="searchReset">Reset Form</button>
-                    <button type="submit" id="searchSubmit">Search Best-Sellers</button>
+                    <select class="searchBtn" id="searchMonth">
+                        <optgroup>
+                        <option value="01">January</option>
+                        <option value="02">Febuary</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                        </optgroup>
+                    </select>
+                    <input type='number' class="searchBtn" id="searchYear" min="2000" max="2019" value="2019">
+                    <button type="submit" id="searchSubmit" class="searchBtn">Search</button>
                 </fieldset>
             </form>
         </section>
         <section id="resultsBox">
         </section>
-        <footer>
-            <img src="images/nytLogo.png">
-        </footer>
     </main>
     <script src="index.js"></script>
 </body>
