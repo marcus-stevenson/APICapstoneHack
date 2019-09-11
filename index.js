@@ -1,7 +1,6 @@
 'use strict'
 const APIKey = 'OhfA7KfFwRf19i3x2ndjDzGDsXJbGbwv'
 function renderBookList(responseObj){
-    //for testing purposes: alert(responseObj.results.books[0].title)
     //render results to dom
     for(let i=0; i<=responseObj.results.books.length-1; i++){
         let bookTitle = responseObj.results.books[i].title;
@@ -20,6 +19,24 @@ function renderBookList(responseObj){
         )
     }
 }
+function findFirstListDate(listToFind){
+    fetch(`https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=${APIKey}`)
+    .then(function(response){
+        if(response.ok){
+            return response.json()
+        }
+    })
+    .then(function(responseJson){
+        let oldestPubDate;
+        for (let i=0; i<=responseJson.results.length-1; i++){
+            if(listToFind === responseJson.results[i].list_name_encoded){
+                oldestPubDate = responseJson.results[i].oldest_published_date;
+            }
+        }
+        alert(`Error: try a date after ${oldestPubDate}`);
+    })
+
+}
 function searchLists(dateToFetch, listToFetch){
     //make call to /lists/{date}/{list} endpoint
     let fetchListURL = `https://api.nytimes.com/svc/books/v3/lists/${dateToFetch}/${listToFetch}.json?api-key=${APIKey}`
@@ -28,10 +45,14 @@ function searchLists(dateToFetch, listToFetch){
         if(response.ok){
             return response.json();
         }
+        throw new Error (response.errors[0]);
     })
     .then(function(responseJson){
         //pass response to be rendered
         renderBookList(responseJson);
+    }).catch(function(err){
+        //fetch days
+        findFirstListDate(listToFetch) 
     });
 }
 function searchSubmit(){
@@ -68,16 +89,10 @@ function wikiBtnClicked(clickEvent){
     let wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${wikiStringFormatted}`
     fetch(wikiURL)
         .then(function(response){
-            let statusNum = response.status;
-            if (statusNum === 404){
-                //author string not recognized by wikipedia api
-                //display message to user in wikiresults box
-                $(`#${selectedResultID}`).children('.wikiRes').append("<p>This author's name does not have a corresponding Wikipedia article. You can request that one be made <a href='https://en.wikipedia.org/wiki/Wikipedia:Articles_for_creation'>here</a></p>")
-                $(`#${selectedResultID}`).children('.wikiRes').toggleClass('hidden')
-            }
-            else if(response.ok){
+            if(response.ok){
                 return response.json();
             }
+            throw new Error (response);
         })
         .then(function(responseJson){
             let resType = responseJson.type;
@@ -95,6 +110,11 @@ function wikiBtnClicked(clickEvent){
                 //display message to user in wikiresults box
                 $(`#${selectedResultID}`).children('.wikiRes').append("<p>This author's name does not have a corresponding Wikipedia article. You can request that one be made <a href='https://en.wikipedia.org/wiki/Wikipedia:Articles_for_creation'>here</a></p>")
             }
+            $(`#${selectedResultID}`).children('.wikiRes').toggleClass('hidden')
+        }).catch(function(err){
+            //author string not recognized by wikipedia api
+            //display message to user in wikiresults box
+            $(`#${selectedResultID}`).children('.wikiRes').append("<p>This author's name does not have a corresponding Wikipedia article. You can request that one be made <a href='https://en.wikipedia.org/wiki/Wikipedia:Articles_for_creation'>here</a></p>")
             $(`#${selectedResultID}`).children('.wikiRes').toggleClass('hidden')
         })
 }
